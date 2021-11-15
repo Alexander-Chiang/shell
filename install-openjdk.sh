@@ -7,7 +7,6 @@ yellow='\033[33m'
 plain='\033[0m'
 
 hasJdk(){
-    # 检测Java是否安装
     java -version
     if [ $? -eq 0 ]
     then
@@ -26,7 +25,7 @@ then
     yum install -y java-1.8.0-openjdk-devel.x86_64
     echo "Set Environment variable..."
     
-    cat > /etc/profile.d/openjdk.sh << EOF
+    cat > /etc/profile.d/openjdk.sh << \EOF
 #!/bin/bash
 
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
@@ -43,14 +42,13 @@ EOF
         echo -e "${yellow}============================================================${plain}"
         echo -e "${green}JDK1.8 Install Success${plain}"
         echo -e "${yellow}============================================================${plain}"
-        java -version
     else
         echo -e "${yellow}============================================================${plain}"
         echo -e "${red}JDK1.8Install Failed ${plain}"
         echo -e "${yellow}============================================================${plain}"
     fi
 else
-    echo -e "${green}JDK1.8已安装${plain}"
+    echo -e "${green}JDK1.8 Exists Already${plain}"
 
 fi
 echo ""
