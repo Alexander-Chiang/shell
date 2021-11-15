@@ -1,12 +1,20 @@
 #! /bin/bash
 
+# Color
+red='\033[31m'
+green='\033[32m'
+yellow='\033[33m'
+plain='\033[0m'
+
 hasJdk(){
-    RESULT=$(pgrep java)
-    if [[ ! $RESULT ]]
+    # 检测Java是否安装
+    java -version
+    if [ $? -eq 0 ]
     then
+        return 1;
+    else
         return 0;
     fi
-    return 1;
 }
 
 hasJdk
@@ -17,23 +25,32 @@ then
     yum install -y java-1.8.0-openjdk
     yum install -y java-1.8.0-openjdk-devel.x86_64
     echo "Set Environment variable..."
+    
     cat > /etc/profile.d/openjdk.sh << EOF
-    #!/bin/bash
+#!/bin/bash
 
-    export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
-    export JRE_HOME=$JAVA_HOME/jre
-    export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
-    export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.242.b08-0.el7_7.x86_64
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
 EOF
 
     source /etc/profile.d/openjdk.sh 
 
     hasJdk
-    if [ $? != 1 ]
+    if [ $? == 1 ]
     then
-      echo "Install jdk Fail"
+        echo -e "${yellow}============================================================${plain}"
+        echo -e "${green}JDK1.8 Install Success${plain}"
+        echo -e "${yellow}============================================================${plain}"
+        java -version
+    else
+        echo -e "${yellow}============================================================${plain}"
+        echo -e "${red}JDK1.8Install Failed ${plain}"
+        echo -e "${yellow}============================================================${plain}"
     fi
-fi
+else
+    echo -e "${green}JDK1.8已安装${plain}"
 
-java -version
+fi
 echo ""
